@@ -11,7 +11,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .game-container {
@@ -63,10 +63,56 @@ button:hover {
 }
 
 .status {
+    margin-top: 14px;
     font-size: 12px;
-    margin-top: 10px;
     color: #666;
-}.scene-image {
+}
+
+.status-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 8px;
+}
+
+.status-label {
+    width: 80px;
+    font-size: 12px;
+    color: #888;
+    flex-shrink: 0;
+}
+
+.status-bar-bg {
+    flex: 1;
+    height: 8px;
+    background-color: #ede8df;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.status-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.grace-fill {
+    background: linear-gradient(to right, #f0c0c8, #e8a0b0);
+}
+
+.stress-fill {
+    background: linear-gradient(to right, #c8d8c0, #a0b890);
+}
+
+.scene-label {
+    font-size: 11px;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+}
+
+.scene-image {
     width: 65%;
     display: block;
     margin: 0 auto 15px auto;
@@ -86,16 +132,49 @@ button:hover {
     }
 }
 
+.shop-message {
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+    margin: 12px 0 8px 0;
+    line-height: 1.7;
+}
 
+.shop-button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #c8bfb0;
+    border-radius: 8px;
+    background-color: #f5f0e8;
+    font-size: 14px;
+    color: #5a5248;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+}
+
+.shop-button:hover {
+    background-color: #ede6d8;
+}
 </style>
 </head>
 <body>
 
 <div class="game-container">
     <h1>Quiet Grace  みおの1日 〜オフィス編〜</h1>
+    <div class="scene-label" id="sceneLabel"></div>
     <div class="text" id="story"></div>
     <div id="choices"></div>
-    <div class="status" id="status"></div>
+    <div class="status" id="status">
+        <div class="status-row">
+            <span class="status-label">🌸 やすらぎ</span>
+            <div class="status-bar-bg"><div class="status-bar-fill grace-fill" id="graceBar" style="width:50%"></div></div>
+        </div>
+        <div class="status-row">
+            <span class="status-label">🍃 つかれ</span>
+            <div class="status-bar-bg"><div class="status-bar-fill stress-fill" id="stressBar" style="width:30%"></div></div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -106,9 +185,23 @@ let scene = 0;
 const story = document.getElementById("story");
 const choices = document.getElementById("choices");
 const status = document.getElementById("status");
+const sceneLabel = document.getElementById("sceneLabel");
+
+const sceneLabels = [
+    "🌅 朝",
+    "☀️ 午前",
+    "🍱 ランチ",
+    "🌤 午後①",
+    "📋 午後②",
+    "🌆 退勤前",
+    "🚶 帰り道",
+];
 
 function updateStatus() {
-    status.innerHTML = "Grace: " + grace + " / Stress: " + stress;
+    const graceBar = document.getElementById("graceBar");
+    const stressBar = document.getElementById("stressBar");
+    if (graceBar) graceBar.style.width = Math.min(grace, 100) + "%";
+    if (stressBar) stressBar.style.width = Math.min(stress, 100) + "%";
 }
 
 function nextScene() {
@@ -119,23 +212,55 @@ function nextScene() {
 
     choices.innerHTML = "";
 
+    sceneLabel.innerHTML = sceneLabels[scene] || "";
 
     if (scene === 0) {
-        story.innerHTML = "<img src='images/mio_clipboard.png' class='scene-image'>" + "朝。窓からやわらかな光が差し込む。<br>みおは今日の気持ちを選ぶ。";
+        story.innerHTML = "<img src='images/mio_clipboard.png' class='scene-image'>" +
+            "朝。窓からやわらかな光が差し込む。<br>みおは今日の気持ちを選ぶ。";
         createChoice("静かに深呼吸する", 10, -5);
         createChoice("スマホをすぐ確認する", -5, 5);
     }
 
     else if (scene === 1) {
-        story.innerHTML ="<img src='images/mio_pc.png' class='scene-image'>" + "職場。急な仕事を頼まれた。";
+        story.innerHTML = "<img src='images/mio_pc.png' class='scene-image'>" +
+            "職場。急な仕事を頼まれた。";
         createChoice("引き受ける", -5, 10);
         createChoice("やんわり断る", 10, -5);
     }
 
     else if (scene === 2) {
-        story.innerHTML = "<img src='images/mio_phone.png' class='scene-image'>" + "ランチタイム。同僚に誘われた。";
+        story.innerHTML = "<img src='images/mio_phone.png' class='scene-image'>" +
+            "ランチタイム。同僚に誘われた。";
         createChoice("一緒に行く", 5, 5);
         createChoice("一人で静かに過ごす", 10, -5);
+    }
+
+    else if (scene === 3) {
+        story.innerHTML = "<img src='images/mio_afternoon.png' class='scene-image'>" +
+            "午後。集中したい作業がある。<br>みおはどうする？";
+        createChoice("好きな音楽をそっとかける", 8, -5);
+        createChoice("無音で黙々と作業する", 5, -3);
+    }
+
+    else if (scene === 4) {
+        story.innerHTML = "<img src='images/mio_feedback.png' class='scene-image'>" +
+            "上司から仕事のフィードバックをもらった。<br>少し厳しい言葉もあった。";
+        createChoice("素直に受け取り、メモする", 8, 5);
+        createChoice("内心モヤモヤしながら頷く", -5, 10);
+    }
+
+    else if (scene === 5) {
+        story.innerHTML = "<img src='images/mio_overtime.png' class='scene-image'>" +
+            "退勤前。上司から残業を頼まれた。<br>みおの体はすでに少し疲れている。";
+        createChoice("今日は断って帰る", 10, -8);
+        createChoice("疲れていても引き受ける", -8, 12);
+    }
+
+    else if (scene === 6) {
+        story.innerHTML = "<img src='images/mio_evening.png' class='scene-image'>" +
+            "帰り道。夕暮れが街を染めている。";
+        createChoice("好きなお店に寄り道する", 8, -5);
+        createChoice("まっすぐ家に帰る", 5, -8);
     }
 
     else {
@@ -158,19 +283,39 @@ function createChoice(text, graceChange, stressChange) {
 }
 
 function ending() {
-    if (grace >= 70 && stress <= 40) {
-        story.innerHTML = "✨ Balanced Grace ✨<br>みおは自分のペースを守りながら一日を終えた。";
-    } else if (stress > 60) {
-        story.innerHTML = "Work First<br>仕事は終わったけれど、少し疲れが残った。";
+    sceneLabel.innerHTML = "✨ エンディング";
+
+    let shopMessage = "";
+
+    if (grace >= 80 && stress <= 35) {
+        story.innerHTML = "<img src='images/ending_perfect.png' class='scene-image'>" +
+            "✨ Perfect Grace ✨<br>みおは自分をとても大切にした一日を過ごした。<br>心が満たされている。";
+        shopMessage = "自分を大切にするみおのような毎日を、あなたにも。";
+    } else if (grace >= 65 && stress <= 50) {
+        story.innerHTML = "<img src='images/ending_balanced.png' class='scene-image'>" +
+            "🌿 Balanced Grace 🌿<br>みおは自分のペースを守りながら一日を終えた。<br>静かな達成感がある。";
+        shopMessage = "自分のペースを大切にするあなたへ、Pure Grace のアイテムを。";
+    } else if (stress > 65) {
+        story.innerHTML = "<img src='images/ending_work.png' class='scene-image'>" +
+            "💼 Work First<br>仕事は終わったけれど、心と体に疲れが残った。<br>明日はもう少し自分を優先しよう。";
+        shopMessage = "少し疲れたあなたに、静かな時間を贈りませんか。";
+    } else if (grace < 40) {
+        story.innerHTML = "<img src='images/ending_cloudy.png' class='scene-image'>" +
+            "🌧 Cloudy Day<br>今日は少しうまくいかなかった。<br>でも、明日また選び直せる。";
+        shopMessage = "明日の自分へ、小さな贈り物をしてみませんか。";
     } else {
-        story.innerHTML = "Quiet Grace<br>静かな強さが、みおの中に育っている。";
+        story.innerHTML = "<img src='images/ending_quiet.png' class='scene-image'>" +
+            "🌸 Quiet Grace<br>静かな強さが、みおの中に育っている。<br>今日も、よくがんばった。";
+        shopMessage = "静かにがんばるあなたの毎日に、寄り添うアイテムがあります。";
     }
-    choices.innerHTML = "<button onclick='location.reload()'>もう一度プレイ</button>";
+
+    choices.innerHTML =
+        "<p class='shop-message'>" + shopMessage + "</p>" +
+        "<button class='shop-button' onclick=\"window.open('https://puregrace.shopselect.net/items/all', '_blank')\">Pure Grace のアイテムを見る</button>" +
+        "<button onclick='location.reload()'>もう一度プレイ</button>";
 }
 
-
 nextScene();
-    
 </script>
 
 </body>
