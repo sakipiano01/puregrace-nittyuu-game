@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Quiet Grace  みおの1日 〜オフィス編〜</title>
+<style>
+body {
+    margin: 0;
+    font-family: "Hiragino Mincho ProN", serif;
+    background: linear-gradient(#f8f6f2, #eae6df);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.game-container {
+    width: 380px;
+    background: rgba(255,255,255,0.85);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.text {
+    min-height: 100px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+
+    opacity: 0;
+    animation: fadeText 1.2s ease forwards;
+    animation-delay: 0.6s;
+}
+@keyframes fadeText {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: none;
+    border-radius: 8px;
+    background-color: #dcd6c8;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #cfc7b6;
+}
+
+.status {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #666;
+}.scene-image {
+    width: 65%;
+    display: block;
+    margin: 0 auto 15px auto;
+    border-radius: 12px;
+
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>Quiet Grace  みおの1日 〜オフィス編〜</h1>
+    <div class="text" id="story"></div>
+    <div id="choices"></div>
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+let grace = 50;
+let stress = 30;
+let scene = 0;
+
+const story = document.getElementById("story");
+const choices = document.getElementById("choices");
+const status = document.getElementById("status");
+
+function updateStatus() {
+    status.innerHTML = "Grace: " + grace + " / Stress: " + stress;
+}
+
+function nextScene() {
+
+    story.style.animation = "none";
+    story.offsetHeight;
+    story.style.animation = null;
+
+    choices.innerHTML = "";
+
+
+    if (scene === 0) {
+        story.innerHTML = "<img src='images/mio_clipboard.png' class='scene-image'>" + "朝。窓からやわらかな光が差し込む。<br>みおは今日の気持ちを選ぶ。";
+        createChoice("静かに深呼吸する", 10, -5);
+        createChoice("スマホをすぐ確認する", -5, 5);
+    }
+
+    else if (scene === 1) {
+        story.innerHTML ="<img src='images/mio_pc.png' class='scene-image'>" + "職場。急な仕事を頼まれた。";
+        createChoice("引き受ける", -5, 10);
+        createChoice("やんわり断る", 10, -5);
+    }
+
+    else if (scene === 2) {
+        story.innerHTML = "<img src='images/mio_phone.png' class='scene-image'>" + "ランチタイム。同僚に誘われた。";
+        createChoice("一緒に行く", 5, 5);
+        createChoice("一人で静かに過ごす", 10, -5);
+    }
+
+    else {
+        ending();
+    }
+
+    updateStatus();
+}
+
+function createChoice(text, graceChange, stressChange) {
+    const button = document.createElement("button");
+    button.innerText = text;
+    button.onclick = function() {
+        grace += graceChange;
+        stress += stressChange;
+        scene++;
+        nextScene();
+    };
+    choices.appendChild(button);
+}
+
+function ending() {
+    if (grace >= 70 && stress <= 40) {
+        story.innerHTML = "✨ Balanced Grace ✨<br>みおは自分のペースを守りながら一日を終えた。";
+    } else if (stress > 60) {
+        story.innerHTML = "Work First<br>仕事は終わったけれど、少し疲れが残った。";
+    } else {
+        story.innerHTML = "Quiet Grace<br>静かな強さが、みおの中に育っている。";
+    }
+    choices.innerHTML = "<button onclick='location.reload()'>もう一度プレイ</button>";
+}
+
+
+nextScene();
+    
+</script>
+
+</body>
+</html>
