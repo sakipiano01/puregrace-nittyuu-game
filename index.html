@@ -1,167 +1,254 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!DOCTYPE html><html lang="ja">
+
 <head>
 <meta charset="UTF-8">
-<title>Quiet Grace  みおの1日 〜オフィス編〜</title>
+<title>Quiet Grace  みおの1日 〜春のオフィス編〜</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&display=swap');
+
 body {
     margin: 0;
-    font-family: "Hiragino Mincho ProN", serif;
-    background: linear-gradient(#f8f6f2, #eae6df);
+    font-family: "Noto Serif JP", "Hiragino Mincho ProN", serif;
+    background: linear-gradient(160deg, #fde8ef, #fce4ec);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    transition: background 1.8s ease;
+    overflow-x: hidden;
+}
+
+/* 桜の花びら */
+.petal {
+    position: fixed;
+    top: -20px;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle at 30% 30%, #ffd6e7, #f9a8c9);
+    border-radius: 150% 0 150% 0;
+    opacity: 0;
+    animation: fall linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+@keyframes fall {
+    0%   { opacity: 0; transform: translateY(-20px) rotate(0deg); }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(110vh) rotate(360deg) translateX(60px); }
 }
 
 .game-container {
+    position: relative;
+    z-index: 1;
     width: 380px;
-    background: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.88);
     padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(240, 160, 180, 0.18), 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid rgba(255, 200, 220, 0.3);
 }
 
 h1 {
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 300;
     text-align: center;
     margin-bottom: 10px;
+    color: #c06080;
+    letter-spacing: 0.12em;
+}
+
+.subtitle {
+    font-size: 11px;
+    text-align: center;
+    color: #e8a0b8;
+    letter-spacing: 0.2em;
+    margin-bottom: 14px;
+    font-weight: 300;
 }
 
 .text {
     min-height: 100px;
     margin-bottom: 20px;
-    line-height: 1.6;
-
+    line-height: 1.75;
+    font-size: 13.5px;
+    color: #4a3844;
     opacity: 0;
     animation: fadeText 1.2s ease forwards;
-    animation-delay: 0.6s;
+    animation-delay: 0.5s;
 }
 @keyframes fadeText {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 8px;
-    border: none;
-    border-radius: 8px;
-    background-color: #dcd6c8;
-    font-size: 14px;
-    cursor: pointer;
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
+button {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(220, 160, 180, 0.3);
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(255,245,248,0.9), rgba(252,232,238,0.9));
+    font-family: "Noto Serif JP", "Hiragino Mincho ProN", serif;
+    font-size: 13px;
+    color: #7a4860;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.2s ease;
+    text-align: left;
+}
 button:hover {
-    background-color: #cfc7b6;
+    background: linear-gradient(135deg, rgba(252,220,232,1), rgba(248,200,220,1));
+    border-color: rgba(220, 140, 170, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(220,130,160,0.2);
 }
 
 .status {
     margin-top: 14px;
     font-size: 12px;
-    color: #666;
 }
-
 .status-row {
     display: flex;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 7px;
     gap: 8px;
 }
-
 .status-label {
     width: 80px;
-    font-size: 12px;
-    color: #888;
+    font-size: 11px;
+    color: #b08898;
     flex-shrink: 0;
+    letter-spacing: 0.04em;
 }
-
 .status-bar-bg {
     flex: 1;
-    height: 8px;
-    background-color: #ede8df;
-    border-radius: 4px;
+    height: 6px;
+    background-color: rgba(240,220,228,0.6);
+    border-radius: 3px;
     overflow: hidden;
 }
-
 .status-bar-fill {
     height: 100%;
-    border-radius: 4px;
-    transition: width 0.5s ease;
+    border-radius: 3px;
+    transition: width 0.6s ease;
 }
-
-.grace-fill {
-    background: linear-gradient(to right, #f0c0c8, #e8a0b0);
-}
-
-.stress-fill {
-    background: linear-gradient(to right, #c8d8c0, #a0b890);
-}
+.grace-fill { background: linear-gradient(to right, #f4b8cc, #e87898); }
+.stress-fill { background: linear-gradient(to right, #b8d8b8, #88c080); }
 
 .scene-label {
-    font-size: 11px;
-    color: #aaa;
+    font-size: 10.5px;
+    color: #e8a0b8;
     text-align: center;
-    margin-bottom: 8px;
-    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    letter-spacing: 0.15em;
+    font-weight: 300;
 }
 
 .scene-image {
     width: 65%;
     display: block;
     margin: 0 auto 15px auto;
-    border-radius: 12px;
-
+    border-radius: 14px;
     opacity: 0;
     animation: fadeIn 1.5s ease forwards;
+    filter: drop-shadow(0 4px 12px rgba(220,140,170,0.18));
 }
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .shop-message {
     font-size: 13px;
-    color: #888;
+    color: #a07888;
     text-align: center;
-    margin: 12px 0 8px 0;
-    line-height: 1.7;
+    margin: 14px 0 10px 0;
+    line-height: 1.8;
+    font-weight: 300;
 }
-
 .shop-button {
     width: 100%;
     padding: 12px;
     margin-bottom: 8px;
-    border: 1px solid #c8bfb0;
-    border-radius: 8px;
-    background-color: #f5f0e8;
-    font-size: 14px;
-    color: #5a5248;
+    border: 1px solid rgba(210, 150, 170, 0.4);
+    border-radius: 10px;
+    background: linear-gradient(135deg, #fde8f0, #f8d8e8);
+    font-family: "Noto Serif JP", "Hiragino Mincho ProN", serif;
+    font-size: 13px;
+    color: #8a4860;
     cursor: pointer;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+    text-align: center;
+}
+.shop-button:hover {
+    background: linear-gradient(135deg, #f8d0e4, #f0c0d8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(220,120,160,0.22);
 }
 
-.shop-button:hover {
-    background-color: #ede6d8;
+/* 桜デコライン */
+.sakura-divider {
+    text-align: center;
+    font-size: 14px;
+    color: #f0b0c8;
+    letter-spacing: 6px;
+    margin: 10px 0 14px 0;
+    opacity: 0.7;
+}
+
+/* 読み上げ・音楽コントロール 共通 */
+.ctrl-btn {
+    position: fixed;
+    right: 12px;
+    border-radius: 16px;
+    padding: 5px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(220,150,170,0.15);
+    user-select: none;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+    letter-spacing: 0.05em;
+    font-family: "Hiragino Mincho ProN", serif;
+    white-space: nowrap;
+    z-index: 100;
+}
+
+/* 読み上げボタン */
+.voice-control {
+    top: 12px;
+    background: rgba(240,240,240,0.88);
+    border: 1px solid rgba(200,200,200,0.5);
+    color: #aaa;
+}
+.voice-control:hover {
+    background: rgba(255,230,238,1);
+    border-color: rgba(240,180,200,0.6);
+    color: #c08098;
+}
+.voice-control.is-on {
+    background: rgba(255,220,235,0.95);
+    border: 1px solid rgba(230,160,190,0.6);
+    color: #c06080;
+    box-shadow: 0 2px 10px rgba(220,120,160,0.22);
+}
+.voice-control.is-on:hover {
+    background: rgba(255,200,220,1);
 }
 </style>
 </head>
 <body>
 
+<!-- 桜の花びら -->
+<div id="petals"></div>
+
+<div class="ctrl-btn voice-control" id="voiceBtn" onclick="toggleVoice()">🔇 読み上げ OFF</div>
+
 <div class="game-container">
-    <h1>Quiet Grace  みおの1日 〜オフィス編〜</h1>
+    <div class="subtitle">🌸 Spring Edition</div>
+    <h1>Quiet Grace  みおの1日 〜春のオフィス編〜</h1>
+    <div class="sakura-divider">❀ ❀ ❀</div>
     <div class="scene-label" id="sceneLabel"></div>
     <div class="text" id="story"></div>
     <div id="choices"></div>
@@ -178,23 +265,203 @@ button:hover {
 </div>
 
 <script>
+// =====================
+// 🌸 桜の花びら
+// =====================
+(function createPetals() {
+    const container = document.getElementById("petals");
+    for (let i = 0; i < 18; i++) {
+        const p = document.createElement("div");
+        p.className = "petal";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.animationDuration = (6 + Math.random() * 8) + "s";
+        p.style.animationDelay = (Math.random() * 10) + "s";
+        p.style.width = (7 + Math.random() * 8) + "px";
+        p.style.height = p.style.width;
+        p.style.opacity = 0;
+        // 色を少しランダムに
+        const hue = 330 + Math.random() * 20;
+        p.style.background = `radial-gradient(circle at 30% 30%, hsl(${hue},100%,88%), hsl(${hue},80%,75%))`;
+        container.appendChild(p);
+    }
+})();
+
+// =====================
+// 🔊 読み上げ（サイクル切り替え）
+// モード: 0=OFF / 1=ON(自動) / 2=女性A / 3=女性B
+// =====================
+let voiceMode = 0; // デフォルトOFF
+const voiceModeLabels = ["🔇 読み上げ OFF", "🔊 読み上げ ON", "👩 女性A", "👩 女性B"];
+let jaVoices = [];
+
+function initVoice() {
+    const all = window.speechSynthesis.getVoices();
+    jaVoices = all.filter(v => v.lang === "ja-JP" || v.lang === "ja");
+    // 日本語音声がない環境ではボタン非表示
+    if (all.length > 0 && jaVoices.length === 0) {
+        document.getElementById("voiceBtn").style.display = "none";
+    }
+}
+window.speechSynthesis.onvoiceschanged = initVoice;
+initVoice();
+
+function getVoiceForMode() {
+    if (voiceMode === 0) return null;
+    if (voiceMode === 1) return jaVoices[0] || null;
+    if (voiceMode === 2) {
+        return jaVoices.find(v => /female|woman|kyoko|haruka/i.test(v.name))
+            || jaVoices[0] || null;
+    }
+    if (voiceMode === 3) {
+        // 2番目に見つかる女性声、なければ2番目の声
+        const femaleList = jaVoices.filter(v => /female|woman|kyoko|haruka/i.test(v.name));
+        return femaleList[1] || jaVoices[1] || jaVoices[0] || null;
+    }
+    return null;
+}
+
+function speak(text) {
+    if (voiceMode === 0) return;
+    const clean = text.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+    if (!clean) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(clean);
+    utter.lang = "ja-JP";
+    utter.rate = 0.88;
+    utter.pitch = voiceMode === 3 ? 1.3 : 1.05;
+    const v = getVoiceForMode();
+    if (v) utter.voice = v;
+    window.speechSynthesis.speak(utter);
+}
+
+function toggleVoice() {
+    voiceMode = (voiceMode + 1) % 4;
+    const btn = document.getElementById("voiceBtn");
+    btn.textContent = voiceModeLabels[voiceMode];
+    if (voiceMode === 0) {
+        btn.classList.remove("is-on");
+        window.speechSynthesis.cancel();
+    } else {
+        btn.classList.add("is-on");
+        // 切り替え時にサンプル読み上げ
+        const samples = ["", "読み上げをオンにしました", "女性Aの声です", "女性Bの声です"];
+        setTimeout(() => speak(samples[voiceMode]), 150);
+    }
+}
+
+// =====================
+// 🎵 BGM（春らしい明るいメロディ）
+// =====================
+let audioCtx = null;
+let musicPlaying = false;
+let masterGain = null;
+let scheduledTimeouts = [];
+
+// 春らしいペンタトニック（少し高め・明るめ）
+const springNotes = [329.63, 369.99, 415.30, 493.88, 554.37, 659.25, 739.99, 830.61]; // E F# G# B C# E F# G#
+const melody = [0, 2, 4, 5, 4, 7, 5, 4, 2, 0, 1, 2, 4, 5, 7, 5];
+const beatDuration = 0.45;
+
+function initAudio() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.setValueAtTime(0.14, audioCtx.currentTime);
+    masterGain.connect(audioCtx.destination);
+}
+
+function playNote(freq, startTime, duration, type = "sine", vol = 0.4) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, startTime);
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(vol, startTime + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.1);
+}
+
+function playMelodyLoop() {
+    if (!musicPlaying) return;
+    const now = audioCtx.currentTime;
+    const loopDuration = melody.length * beatDuration;
+    melody.forEach((noteIdx, i) => {
+        const freq = springNotes[noteIdx];
+        const time = now + i * beatDuration;
+        playNote(freq, time, beatDuration * 0.75, "sine", 0.38);
+        // ハーモニー（3度上）
+        if (i % 2 === 0) {
+            const harmIdx = Math.min(noteIdx + 2, springNotes.length - 1);
+            playNote(springNotes[harmIdx], time + 0.02, beatDuration * 1.2, "sine", 0.12);
+        }
+        // 軽いベース（4拍おき）
+        if (i % 4 === 0) {
+            playNote(freq / 2, time, beatDuration * 1.8, "triangle", 0.18);
+        }
+    });
+    const tid = setTimeout(playMelodyLoop, loopDuration * 1000 - 80);
+    scheduledTimeouts.push(tid);
+}
+
+function startMusic() {
+    initAudio();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    musicPlaying = true;
+    playMelodyLoop();
+}
+
+function stopMusic() {
+    musicPlaying = false;
+    scheduledTimeouts.forEach(t => clearTimeout(t));
+    scheduledTimeouts = [];
+}
+
+document.addEventListener("click", function startOnFirstClick() {
+    if (!musicPlaying) startMusic();
+    document.removeEventListener("click", startOnFirstClick);
+}, { once: false });
+
+// =====================
+// 🌸 背景（春の時間帯）
+// =====================
+const sceneBackgrounds = [
+    "linear-gradient(160deg, #fde8f0, #fad0e0)",   // 朝：桜色の夜明け
+    "linear-gradient(160deg, #e8f4e8, #c8e8c8)",   // 午前：新緑・若草
+    "linear-gradient(160deg, #fef8e8, #f8e8c0)",   // ランチ：春の陽だまり
+    "linear-gradient(160deg, #e8f0f8, #c8dced)",   // 午後①：淡い水色
+    "linear-gradient(160deg, #f4e8f4, #e0c8e0)",   // 午後②：藤色
+    "linear-gradient(160deg, #ffe8e8, #f8c8c8)",   // 退勤前：夕桜
+    "linear-gradient(160deg, #f0e8f8, #d8c8f0)",   // 帰り道：宵桜
+    "linear-gradient(160deg, #fce8f4, #f4d0e8)",   // エンディング：花明かり
+];
+
+function updateBackground() {
+    const idx = Math.min(scene, sceneBackgrounds.length - 1);
+    document.body.style.background = sceneBackgrounds[idx];
+}
+
+// =====================
+// ゲーム本体
+// =====================
 let grace = 50;
 let stress = 30;
 let scene = 0;
 
 const story = document.getElementById("story");
 const choices = document.getElementById("choices");
-const status = document.getElementById("status");
 const sceneLabel = document.getElementById("sceneLabel");
 
 const sceneLabels = [
-    "🌅 朝",
-    "☀️ 午前",
-    "🍱 ランチ",
+    "🌸 朝",
+    "🌿 午前",
+    "🌼 ランチ",
     "🌤 午後①",
-    "📋 午後②",
-    "🌆 退勤前",
-    "🚶 帰り道",
+    "🌺 午後②",
+    "🌅 退勤前",
+    "🌙 帰り道",
 ];
 
 function updateStatus() {
@@ -205,68 +472,58 @@ function updateStatus() {
 }
 
 function nextScene() {
-
     story.style.animation = "none";
     story.offsetHeight;
     story.style.animation = null;
-
     choices.innerHTML = "";
-
     sceneLabel.innerHTML = sceneLabels[scene] || "";
+    updateBackground();
 
     if (scene === 0) {
-        story.innerHTML = "<img src='images/mio_clipboard.png' class='scene-image'>" +
-            "朝。窓からやわらかな光が差し込む。<br>みおは今日の気持ちを選ぶ。";
-        createChoice("静かに深呼吸する", 10, -5);
-        createChoice("スマホをすぐ確認する", -5, 5);
-    }
-
-    else if (scene === 1) {
-        story.innerHTML = "<img src='images/mio_pc.png' class='scene-image'>" +
-            "職場。急な仕事を頼まれた。";
-        createChoice("引き受ける", -5, 10);
-        createChoice("やんわり断る", 10, -5);
-    }
-
-    else if (scene === 2) {
-        story.innerHTML = "<img src='images/mio_phone.png' class='scene-image'>" +
-            "ランチタイム。同僚に誘われた。";
-        createChoice("一緒に行く", 5, 5);
-        createChoice("一人で静かに過ごす", 10, -5);
-    }
-
-    else if (scene === 3) {
-        story.innerHTML = "<img src='images/mio_afternoon.png' class='scene-image'>" +
-            "午後。集中したい作業がある。<br>みおはどうする？";
-        createChoice("好きな音楽をそっとかける", 8, -5);
-        createChoice("無音で黙々と作業する", 5, -3);
-    }
-
-    else if (scene === 4) {
-        story.innerHTML = "<img src='images/mio_feedback.png' class='scene-image'>" +
-            "上司から仕事のフィードバックをもらった。<br>少し厳しい言葉もあった。";
-        createChoice("素直に受け取り、メモする", 8, 5);
-        createChoice("内心モヤモヤしながら頷く", -5, 10);
-    }
-
-    else if (scene === 5) {
-        story.innerHTML = "<img src='images/mio_overtime.png' class='scene-image'>" +
-            "退勤前。上司から残業を頼まれた。<br>みおの体はすでに少し疲れている。";
-        createChoice("今日は断って帰る", 10, -8);
-        createChoice("疲れていても引き受ける", -8, 12);
-    }
-
-    else if (scene === 6) {
-        story.innerHTML = "<img src='images/mio_evening.png' class='scene-image'>" +
-            "帰り道。夕暮れが街を染めている。";
-        createChoice("好きなお店に寄り道する", 8, -5);
-        createChoice("まっすぐ家に帰る", 5, -8);
-    }
-
-    else {
+        const text = "春の朝。窓の外に薄いピンクの桜が揺れている。みおは今日の始まり方を選ぶ。";
+        story.innerHTML = "<img src='images/mio_clipboard.png' class='scene-image'>" + text;
+        speak(text);
+        createChoice("🌸 桜を眺めながら深呼吸する", 12, -6);
+        createChoice("📱 スマホですぐにニュースを確認する", -4, 6);
+    } else if (scene === 1) {
+        const text = "職場につくと、デスクに春の異動挨拶状が届いていた。新しいプロジェクトの依頼も来ている。";
+        story.innerHTML = "<img src='images/mio_pc.png' class='scene-image'>" + text;
+        speak(text);
+        createChoice("🌱 新しいことにわくわくしながら引き受ける", 5, 8);
+        createChoice("🍵 まず一呼吸おいてから判断する", 10, -4);
+    } else if (scene === 2) {
+        const text = "春のランチ。お弁当を持ってきた同僚が、桜の見える公園に誘ってくれた。";
+        story.innerHTML = "<img src='images/mio_phone.png' class='scene-image'>" + text;
+        speak(text);
+        createChoice("🌸 一緒に桜の下でランチをする", 10, -4);
+        createChoice("🍱 デスクでゆっくり静かに食べる", 7, -6);
+    } else if (scene === 3) {
+        const text = "午後。春の陽気で少し眠い。集中力が途切れそうになってきた。";
+        story.innerHTML = "<img src='images/mio_afternoon.png' class='scene-image'>" + text;
+        speak(text);
+        createChoice("🌿 ハーブティーをいれてリフレッシュする", 10, -7);
+        createChoice("💻 眠気をこらえてそのまま作業を続ける", -3, 8);
+    } else if (scene === 4) {
+        const text = "同僚からの春の異動報告。長く一緒に働いた人が来月から別の部署へ。少し寂しい気持ちになった。";
+        story.innerHTML = "<img src='images/mio_feedback.png' class='scene-image'>" + text;
+        speak(text);
+        createChoice("🌸 「いつでも相談して」と笑顔で伝える", 10, 3);
+        createChoice("📝 さっそく引き継ぎの準備を始める", 3, 8);
+    } else if (scene === 5) {
+        const text = "退勤前。桜の季節限定のデザートが近くのカフェに出ているらしい。でも資料の締め切りも明日だ。";
+        story.innerHTML = "<img src='images/mio_overtime.png' class='scene-image'>" + text;
+        speak(text);
+        createChoice("🌸 今年の桜を楽しむ。資料は明朝早く仕上げる", 12, -6);
+        createChoice("📋 今日中に資料を終わらせてから帰る", -6, 10);
+    } else if (scene === 6) {
+        const text = "帰り道。夕暮れに染まる桜並木。やわらかい花びらが足元に散っている。";
+        story.innerHTML = "<img src='images/mio_evening.png' class='scene-image'>" + text;
+        speak(text);
+        createChoice("📸 少しだけ立ち止まって写真に収める", 10, -6);
+        createChoice("🚶 静かに歩きながら余韻に浸る", 8, -8);
+    } else {
         ending();
     }
-
     updateStatus();
 }
 
@@ -284,39 +541,48 @@ function createChoice(text, graceChange, stressChange) {
 
 function ending() {
     sceneLabel.innerHTML = "✨ エンディング";
-
+    updateBackground();
     let shopMessage = "";
 
     if (grace >= 80 && stress <= 35) {
+        const text = "春満開のGrace。みおは春の訪れをまるごと受け取った一日を過ごした。心がほどけるような、やさしい満足感がある。";
         story.innerHTML = "<img src='images/ending_perfect.png' class='scene-image'>" +
-            "✨ Perfect Grace ✨<br>みおは自分をとても大切にした一日を過ごした。<br>心が満たされている。";
-        shopMessage = "自分を大切にするみおのような毎日を、あなたにも。";
+            "🌸 満開のGrace 🌸<br>みおは春の訪れをまるごと受け取った一日。<br>心がほどけるような、やさしい満足感がある。";
+        speak(text);
+        shopMessage = "春のように軽やかに、自分を大切にするあなたへ。";
     } else if (grace >= 65 && stress <= 50) {
+        const text = "Gentle Spring。みおらしいペースで、春の一日を丁寧に生きた。花のように、ゆっくり開いていくことの美しさを知っている。";
         story.innerHTML = "<img src='images/ending_balanced.png' class='scene-image'>" +
-            "🌿 Balanced Grace 🌿<br>みおは自分のペースを守りながら一日を終えた。<br>静かな達成感がある。";
-        shopMessage = "自分のペースを大切にするあなたへ、Pure Grace のアイテムを。";
+            "🌿 Gentle Spring 🌿<br>みおらしいペースで、春の一日を丁寧に生きた。<br>ゆっくり開く花のような美しさ。";
+        speak(text);
+        shopMessage = "自分のペースで咲く。そんなあなたに、Pure Grace のアイテムを。";
     } else if (stress > 65) {
+        const text = "Scattered Petals。がんばりすぎた一日。桜のように、散り際も美しいけれど——明日はもう少しだけ、自分を労わろう。";
         story.innerHTML = "<img src='images/ending_work.png' class='scene-image'>" +
-            "💼 Work First<br>仕事は終わったけれど、心と体に疲れが残った。<br>明日はもう少し自分を優先しよう。";
-        shopMessage = "少し疲れたあなたに、静かな時間を贈りませんか。";
+            "🌧 Scattered Petals<br>がんばりすぎた一日。<br>明日はもう少しだけ、自分を労わろう。";
+        speak(text);
+        shopMessage = "少し疲れたあなたに、春のような静けさを贈りたい。";
     } else if (grace < 40) {
+        const text = "Spring Rain。今日は少し曇り空。でも、雨の後に咲く花もある。また明日、新しい春の一日が始まる。";
         story.innerHTML = "<img src='images/ending_cloudy.png' class='scene-image'>" +
-            "🌧 Cloudy Day<br>今日は少しうまくいかなかった。<br>でも、明日また選び直せる。";
-        shopMessage = "明日の自分へ、小さな贈り物をしてみませんか。";
+            "🌦 Spring Rain<br>今日は少し曇り空だったけれど——<br>雨の後に咲く花もある。";
+        speak(text);
+        shopMessage = "また明日、新しい春の一日が始まる。あなたの隣に。";
     } else {
+        const text = "Quiet Bloom。派手ではないけれど、確かに咲いている。みおの静かな春が、今年も美しかった。";
         story.innerHTML = "<img src='images/ending_quiet.png' class='scene-image'>" +
-            "🌸 Quiet Grace<br>静かな強さが、みおの中に育っている。<br>今日も、よくがんばった。";
-        shopMessage = "静かにがんばるあなたの毎日に、寄り添うアイテムがあります。";
+            "🌸 Quiet Bloom<br>派手ではないけれど、確かに咲いている。<br>みおの静かな春が、今年も美しかった。";
+        speak(text);
+        shopMessage = "静かに、でも確かに咲いているあなたへ。";
     }
 
     choices.innerHTML =
         "<p class='shop-message'>" + shopMessage + "</p>" +
-        "<button class='shop-button' onclick=\"window.open('https://puregrace.shopselect.net/items/all', '_blank')\">Pure Grace のアイテムを見る</button>" +
-        "<button onclick='location.reload()'>もう一度プレイ</button>";
+        "<button class='shop-button' onclick=\"window.open('https://puregrace.shopselect.net/items/all', '_blank')\">🌸 Pure Grace のアイテムを見る</button>" +
+        "<button onclick='location.reload()'>🌿 もう一度プレイ</button>";
 }
 
 nextScene();
 </script>
-
 </body>
 </html>
