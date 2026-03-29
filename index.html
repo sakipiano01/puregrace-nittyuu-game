@@ -18,7 +18,6 @@ body {
     overflow-x: hidden;
 }
 
-/* 桜の花びら */
 .petal {
     position: fixed;
     top: -20px;
@@ -188,7 +187,6 @@ button:hover {
     box-shadow: 0 4px 14px rgba(220,120,160,0.22);
 }
 
-/* 桜デコライン */
 .sakura-divider {
     text-align: center;
     font-size: 14px;
@@ -198,7 +196,6 @@ button:hover {
     opacity: 0.7;
 }
 
-/* 読み上げ・音楽コントロール 共通 */
 .ctrl-btn {
     position: fixed;
     right: 12px;
@@ -215,7 +212,6 @@ button:hover {
     z-index: 100;
 }
 
-/* 読み上げボタン */
 .voice-control {
     top: 12px;
     background: rgba(240,240,240,0.88);
@@ -236,14 +232,37 @@ button:hover {
 .voice-control.is-on:hover {
     background: rgba(255,200,220,1);
 }
+
+.music-control {
+    top: 44px;
+    background: rgba(240,240,240,0.88);
+    border: 1px solid rgba(200,200,200,0.5);
+    color: #aaa;
+}
+.music-control:hover {
+    background: rgba(255,230,238,1);
+    border-color: rgba(240,180,200,0.6);
+    color: #c08098;
+}
+.music-control.is-on {
+    background: rgba(255,220,235,0.95);
+    border: 1px solid rgba(230,160,190,0.6);
+    color: #c06080;
+    box-shadow: 0 2px 10px rgba(220,120,160,0.22);
+}
+.music-control.is-on:hover {
+    background: rgba(255,200,220,1);
+}
 </style>
 </head>
 <body>
 
-<!-- 桜の花びら -->
 <div id="petals"></div>
 
+<audio id="bgm" src="audio/bgm.mp3" loop preload="auto"></audio>
+
 <div class="ctrl-btn voice-control" id="voiceBtn" onclick="toggleVoice()">🔇 読み上げ OFF</div>
+<div class="ctrl-btn music-control" id="musicBtn" onclick="toggleMusic()">🎵 音楽 OFF</div>
 
 <div class="game-container">
     <div class="subtitle">🌸 Spring Edition</div>
@@ -279,7 +298,6 @@ button:hover {
         p.style.width = (7 + Math.random() * 8) + "px";
         p.style.height = p.style.width;
         p.style.opacity = 0;
-        // 色を少しランダムに
         const hue = 330 + Math.random() * 20;
         p.style.background = `radial-gradient(circle at 30% 30%, hsl(${hue},100%,88%), hsl(${hue},80%,75%))`;
         container.appendChild(p);
@@ -287,17 +305,15 @@ button:hover {
 })();
 
 // =====================
-// 🔊 読み上げ（サイクル切り替え）
-// モード: 0=OFF / 1=ON(自動) / 2=女性A / 3=女性B
+// 🔊 読み上げ
 // =====================
-let voiceMode = 0; // デフォルトOFF
+let voiceMode = 0;
 const voiceModeLabels = ["🔇 読み上げ OFF", "🔊 読み上げ ON", "👩 女性A", "👩 女性B"];
 let jaVoices = [];
 
 function initVoice() {
     const all = window.speechSynthesis.getVoices();
     jaVoices = all.filter(v => v.lang === "ja-JP" || v.lang === "ja");
-    // 日本語音声がない環境ではボタン非表示
     if (all.length > 0 && jaVoices.length === 0) {
         document.getElementById("voiceBtn").style.display = "none";
     }
@@ -309,11 +325,9 @@ function getVoiceForMode() {
     if (voiceMode === 0) return null;
     if (voiceMode === 1) return jaVoices[0] || null;
     if (voiceMode === 2) {
-        return jaVoices.find(v => /female|woman|kyoko|haruka/i.test(v.name))
-            || jaVoices[0] || null;
+        return jaVoices.find(v => /female|woman|kyoko|haruka/i.test(v.name)) || jaVoices[0] || null;
     }
     if (voiceMode === 3) {
-        // 2番目に見つかる女性声、なければ2番目の声
         const femaleList = jaVoices.filter(v => /female|woman|kyoko|haruka/i.test(v.name));
         return femaleList[1] || jaVoices[1] || jaVoices[0] || null;
     }
@@ -343,99 +357,56 @@ function toggleVoice() {
         window.speechSynthesis.cancel();
     } else {
         btn.classList.add("is-on");
-        // 切り替え時にサンプル読み上げ
         const samples = ["", "読み上げをオンにしました", "女性Aの声です", "女性Bの声です"];
         setTimeout(() => speak(samples[voiceMode]), 150);
     }
 }
 
 // =====================
-// 🎵 BGM（春らしい明るいメロディ）
+// 🎵 BGM（スーノ音楽）
 // =====================
-let audioCtx = null;
+const bgm = document.getElementById("bgm");
 let musicPlaying = false;
-let masterGain = null;
-let scheduledTimeouts = [];
 
-// 春らしいペンタトニック（少し高め・明るめ）
-const springNotes = [329.63, 369.99, 415.30, 493.88, 554.37, 659.25, 739.99, 830.61]; // E F# G# B C# E F# G#
-const melody = [0, 2, 4, 5, 4, 7, 5, 4, 2, 0, 1, 2, 4, 5, 7, 5];
-const beatDuration = 0.45;
-
-function initAudio() {
-    if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    masterGain = audioCtx.createGain();
-    masterGain.gain.setValueAtTime(0.14, audioCtx.currentTime);
-    masterGain.connect(audioCtx.destination);
-}
-
-function playNote(freq, startTime, duration, type = "sine", vol = 0.4) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, startTime);
-    gain.gain.setValueAtTime(0, startTime);
-    gain.gain.linearRampToValueAtTime(vol, startTime + 0.04);
-    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-    osc.connect(gain);
-    gain.connect(masterGain);
-    osc.start(startTime);
-    osc.stop(startTime + duration + 0.1);
-}
-
-function playMelodyLoop() {
-    if (!musicPlaying) return;
-    const now = audioCtx.currentTime;
-    const loopDuration = melody.length * beatDuration;
-    melody.forEach((noteIdx, i) => {
-        const freq = springNotes[noteIdx];
-        const time = now + i * beatDuration;
-        playNote(freq, time, beatDuration * 0.75, "sine", 0.38);
-        // ハーモニー（3度上）
-        if (i % 2 === 0) {
-            const harmIdx = Math.min(noteIdx + 2, springNotes.length - 1);
-            playNote(springNotes[harmIdx], time + 0.02, beatDuration * 1.2, "sine", 0.12);
-        }
-        // 軽いベース（4拍おき）
-        if (i % 4 === 0) {
-            playNote(freq / 2, time, beatDuration * 1.8, "triangle", 0.18);
-        }
-    });
-    const tid = setTimeout(playMelodyLoop, loopDuration * 1000 - 80);
-    scheduledTimeouts.push(tid);
-}
-
-function startMusic() {
-    initAudio();
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    musicPlaying = true;
-    playMelodyLoop();
-}
-
-function stopMusic() {
-    musicPlaying = false;
-    scheduledTimeouts.forEach(t => clearTimeout(t));
-    scheduledTimeouts = [];
+function toggleMusic() {
+    const btn = document.getElementById("musicBtn");
+    if (musicPlaying) {
+        bgm.pause();
+        musicPlaying = false;
+        btn.textContent = "🎵 音楽 OFF";
+        btn.classList.remove("is-on");
+    } else {
+        bgm.play();
+        musicPlaying = true;
+        btn.textContent = "🎵 音楽 ON";
+        btn.classList.add("is-on");
+    }
 }
 
 document.addEventListener("click", function startOnFirstClick() {
-    if (!musicPlaying) startMusic();
+    if (!musicPlaying) {
+        bgm.play().then(() => {
+            musicPlaying = true;
+            const btn = document.getElementById("musicBtn");
+            btn.textContent = "🎵 音楽 ON";
+            btn.classList.add("is-on");
+        }).catch(() => {});
+    }
     document.removeEventListener("click", startOnFirstClick);
-}, { once: false });
+}, { once: true });
 
 // =====================
 // 🌸 背景（春の時間帯）
 // =====================
 const sceneBackgrounds = [
-    "linear-gradient(160deg, #fde8f0, #fad0e0)",   // 朝：桜色の夜明け
-    "linear-gradient(160deg, #e8f4e8, #c8e8c8)",   // 午前：新緑・若草
-    "linear-gradient(160deg, #fef8e8, #f8e8c0)",   // ランチ：春の陽だまり
-    "linear-gradient(160deg, #e8f0f8, #c8dced)",   // 午後①：淡い水色
-    "linear-gradient(160deg, #f4e8f4, #e0c8e0)",   // 午後②：藤色
-    "linear-gradient(160deg, #ffe8e8, #f8c8c8)",   // 退勤前：夕桜
-    "linear-gradient(160deg, #f0e8f8, #d8c8f0)",   // 帰り道：宵桜
-    "linear-gradient(160deg, #fce8f4, #f4d0e8)",   // エンディング：花明かり
+    "linear-gradient(160deg, #fde8f0, #fad0e0)",
+    "linear-gradient(160deg, #e8f4e8, #c8e8c8)",
+    "linear-gradient(160deg, #fef8e8, #f8e8c0)",
+    "linear-gradient(160deg, #e8f0f8, #c8dced)",
+    "linear-gradient(160deg, #f4e8f4, #e0c8e0)",
+    "linear-gradient(160deg, #ffe8e8, #f8c8c8)",
+    "linear-gradient(160deg, #f0e8f8, #d8c8f0)",
+    "linear-gradient(160deg, #fce8f4, #f4d0e8)",
 ];
 
 function updateBackground() {
@@ -586,3 +557,15 @@ nextScene();
 </script>
 </body>
 </html>
+```
+
+---
+
+GitHubにアップするファイル構成はこうなります：
+```
+puregrace-nittyuu-game/
+├── index.html   ← 上のコード
+├── audio/
+│   └── bgm.mp3  ← スーノからダウンロードしたファイル
+└── images/
+    └── （既存の画像たち）
