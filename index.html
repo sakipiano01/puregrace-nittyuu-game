@@ -2,6 +2,7 @@
 
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiet Grace  みおの1日 〜春のオフィス編〜</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&display=swap');
@@ -12,8 +13,10 @@ body {
     background: linear-gradient(160deg, #fde8ef, #fce4ec);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
+    padding: 60px 16px 40px;
+    box-sizing: border-box;
     transition: background 1.8s ease;
     overflow-x: hidden;
 }
@@ -40,12 +43,15 @@ body {
 .game-container {
     position: relative;
     z-index: 1;
-    width: 380px;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
     background: rgba(255,255,255,0.88);
     padding: 20px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(240, 160, 180, 0.18), 0 2px 8px rgba(0,0,0,0.06);
     border: 1px solid rgba(255, 200, 220, 0.3);
+    box-sizing: border-box;
 }
 
 h1 {
@@ -234,7 +240,7 @@ button:hover {
 }
 
 .music-control {
-    top: 44px;
+    top: 52px;
     background: rgba(240,240,240,0.88);
     border: 1px solid rgba(200,200,200,0.5);
     color: #aaa;
@@ -284,9 +290,6 @@ button:hover {
 </div>
 
 <script>
-// =====================
-// 🌸 桜の花びら
-// =====================
 (function createPetals() {
     const container = document.getElementById("petals");
     for (let i = 0; i < 18; i++) {
@@ -304,9 +307,6 @@ button:hover {
     }
 })();
 
-// =====================
-// 🔊 読み上げ
-// =====================
 let voiceMode = 0;
 const voiceModeLabels = ["🔇 読み上げ OFF", "🔊 読み上げ ON", "👩 女性A", "👩 女性B"];
 let jaVoices = [];
@@ -362,9 +362,6 @@ function toggleVoice() {
     }
 }
 
-// =====================
-// 🎵 BGM（スーノ音楽）
-// =====================
 const bgm = document.getElementById("bgm");
 let musicPlaying = false;
 
@@ -395,9 +392,6 @@ document.addEventListener("click", function startOnFirstClick() {
     document.removeEventListener("click", startOnFirstClick);
 }, { once: true });
 
-// =====================
-// 🌸 背景（春の時間帯）
-// =====================
 const sceneBackgrounds = [
     "linear-gradient(160deg, #fde8f0, #fad0e0)",
     "linear-gradient(160deg, #e8f4e8, #c8e8c8)",
@@ -414,9 +408,6 @@ function updateBackground() {
     document.body.style.background = sceneBackgrounds[idx];
 }
 
-// =====================
-// ゲーム本体
-// =====================
 let grace = 50;
 let stress = 30;
 let scene = 0;
@@ -557,4 +548,3 @@ nextScene();
 </script>
 </body>
 </html>
-
